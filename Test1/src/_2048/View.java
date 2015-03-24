@@ -15,11 +15,12 @@ public class View extends JPanel{
 	Settings settings;
 	int x, y, newx, newy;
 	int breedte, hoogte;
-	int rijen, kolommen;
 	Color background, foreground;
 	ArrayList<Integer> waarden;
 	Font font;
 	FontMetrics fm;
+	int rijen;
+	int kolommen;
 	
 	public View(Model model){
 		
@@ -31,20 +32,17 @@ public class View extends JPanel{
 		this.hoogte = settings.getHoogte();
 		this.background = settings.getBackground();
 		this.foreground = settings.getForeground();
+		this.font = settings.getFont1();
 		this.rijen = settings.getRijen();
 		this.kolommen = settings.getKolommen();
-		this.font = settings.getFont1();
 		
-		this.waarden = new ArrayList<Integer>(rijen*kolommen);
-		for (int i = 0; i< rijen* kolommen; i++){
-			waarden.add(0);
-		}
-			int beginwaarde1 = (int)(Math.random()*rijen*kolommen);
+		this.waarden = model.waarden;
+			int beginwaarde1 = (int)(Math.random()*waarden.size());
 			waarden.set(beginwaarde1, 2);
 			//voor een extra beginwaarde
-			int beginwaarde2 = (int)(Math.random()*rijen*kolommen);
+			int beginwaarde2 = (int)(Math.random()*waarden.size());
 			while (beginwaarde1 == beginwaarde2)	
-				beginwaarde2 = (int)(Math.random()*rijen*kolommen);
+				beginwaarde2 = (int)(Math.random()*waarden.size());
 			waarden.set(beginwaarde2, 2);
 	}
 	

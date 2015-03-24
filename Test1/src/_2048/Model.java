@@ -30,6 +30,12 @@ public class Model {
 		this.waarden = waarden;
 		
 	}
+	/** Get the current line number.
+	 * @return int - Current line number.
+	 */
+	public static int getLineNumber() {
+	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
+	}
 	
 	public void links(){
 		
@@ -73,6 +79,7 @@ public class Model {
 // 		Stap 2:	Tel alle aangrenzende waarden bij elkaar op
 // 		Stap 3: Schuif nog een keer de niet-0 waarden naar links
 //		stap 1-3 gecombineerd
+		System.out.println("onbewerkte waarden: "+waarden);
 		waarden = schuifNaarLinks(waarden);
 		
 //		Stap 4: Voeg een random waarde toe
@@ -90,13 +97,14 @@ public class Model {
 		boolean checked = false;
 		
 		//stap 2: Haal rij op, voor elke rij:
-		ArrayList<Integer> rij = new ArrayList<Integer>(kolommen);
+		
 		for (int rijcount = 0; rijcount<rijen; rijcount++){
-			
+			ArrayList<Integer> rij = new ArrayList<Integer>(kolommen);
 			//vul de rij met waarden (kolommen geeft het aantal aan)
 			for (int kolomcount = 0; kolomcount< kolommen; kolomcount++) {
 				rij.add(waarden.get(kolomcount + rijcount*kolommen));
 				}
+				System.out.println("---- rij: "+rij+" -----");
 				//maak een counter aan, om het aantal posities bij te houden (gelijk aan kolommen)
 				int counter = 0;
 				//stel "checked" in op false, omdat de eerste waarde van een rij nooit genegeerd moet worden
@@ -104,12 +112,11 @@ public class Model {
 				
 				//a. vergelijk positie 1 en 2
 				
-				//als gelijk en geen 0
-				
+				//als gelijk en geen 0		
 				if ((rij.get(0)==rij.get(1)) && ( rij.get(0)!= 0)){
 					//vul de returnarray aan met de waarde (positie1 * 2)
 					returnArray.add(rij.get(1)*2);
-	
+					System.out.println(getLineNumber()+": "+returnArray+"(gelijk en geen 0)");
 					//stel "checked" in op true - de volgende waarde die we uitlezen moet genegeerd worden
 					checked = true;
 					// verhoog de counter met 1 om bij te houden hoeveel rijposities we gevuld hebben
@@ -117,20 +124,23 @@ public class Model {
 				}	
 				//als gelijk en 0, vul de rij niet aan
 				else if (rij.get(0)==rij.get(1)){	
+					System.out.println(getLineNumber()+": "+returnArray+"(gelijk en 0)");
 				}
 				//als niet gelijk (anders)
 				else{
 					//vul de doelarray aan met de waarde (positie 1)
 					returnArray.add(rij.get(0));
+					System.out.println(getLineNumber()+": "+returnArray+"(ongelijk)");
 					// verhoog de counter met 1 om bij te houden hoeveel rijposities we gevuld hebben
 					counter++;
 				}
 				
 				//b. voor elk volgende getal (m.u.v. de laatste die we uitlezen)
-				for (int i = 0; i < kolommen-1; i++){
+				for (int i = 1; i < kolommen-1; i++){
 					//als "checked" niets doen - de waarde was al opgeteld en dit resulteert in een 0 op het eind
 					if (checked){
 						// alleen checked weer op false zetten
+						System.out.println(getLineNumber()+": "+returnArray+"(checked)");
 						checked = false;
 					}
 					//anders:
@@ -139,6 +149,7 @@ public class Model {
 						if ((rij.get(i)==rij.get(i+1)) && ( rij.get(i)!= 0)){
 							//vul de returnarray aan op met de waarde (positie1 * 2)
 							returnArray.add(rij.get(i)*2);
+							System.out.println(getLineNumber()+": "+returnArray+"(gelijk maar geen 0)");
 							//stel "checked" in op true - de volgende waarde die we uitlezen moet genegeerd worden
 							checked = true;
 							// verhoog de counter met 1 om bij te houden hoeveel rijposities we gevuld hebben 
@@ -151,6 +162,7 @@ public class Model {
 						else{
 							//vul de doelarray aan met de waarde (positie huidig)
 							returnArray.add(rij.get(i));
+							System.out.println(getLineNumber()+": "+returnArray+"(niet gelijk)");
 							// verhoog de counter met 1 om bij te houden hoeveel rijposities we gevuld hebben
 							counter++;
 						}
@@ -170,6 +182,7 @@ public class Model {
 			else{
 				//vul de doelarray aan met de waarde (positie huidig)
 				returnArray.add(rij.get(kolommen-1));
+				System.out.println(getLineNumber()+": "+returnArray);
 				// verhoog de counter met 1 om bij te houden hoeveel rijposities we gevuld hebben
 				counter++;
 			}			
@@ -177,10 +190,12 @@ public class Model {
 			for (int i=0 ; i <kolommen-counter; i++){
 				// vul de doelarray aan met 0
 				returnArray.add(0);
+				System.out.println(getLineNumber()+": "+returnArray);
 			}			
 	}
 	
 	//Stap 3. return de doellarray
+	System.out.println(returnArray);
 	return returnArray;
 	}
 	
@@ -195,7 +210,7 @@ public class Model {
 		//stel de counter in
 		int telnullen = 0;
 		//	boolean om bij te houden of er nog plekken leeg zijn
-		boolean legeplekken = false;
+		boolean legeplekken = true;
 		
 		// tel hoeveel waarden er gelijk zijn aan 0 
 		for (int i = 0; i< rijen*kolommen; i++){
@@ -237,10 +252,10 @@ public class Model {
 	
 	public ArrayList<Integer> swipeLinks(ArrayList<Integer> rij1){
 		
-		//maak doelarray 
+		//maak returnarray 
 		ArrayList<Integer> rij2 = new ArrayList<Integer>(rijen*kolommen);
 			
-		// teller die bijhoudt hoeveel waarden in de doelarray geschreven zijn
+		// teller die bijhoudt hoeveel waarden in de returnarray geschreven zijn
 		int rij2count = 0;
 		
 		// alle niet-0 waarden achterelkaar in de array wegschrijven

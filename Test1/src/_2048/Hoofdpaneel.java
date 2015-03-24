@@ -15,6 +15,6 @@ public class Hoofdpaneel extends JPanel{
 		View view = new View(model);
 		add(view,BorderLayout.CENTER);
 		view.setFocusable(true);
-		view.addKeyListener(new MyKl(model));
+		view.addKeyListener(new MyKl(model, view));
 	}
 }
